@@ -108,6 +108,7 @@ func rsecrets(dir string) string {
 	}
 
 	infos, err := f.Readdir(0)
+	f.Close()
 	if err != nil {
 		return err.Error()
 	}
