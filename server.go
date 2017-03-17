@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -134,7 +135,15 @@ func service() string {
 	port := os.Getenv("KUBERNETES_SERVICE_PORT")
 	url := fmt.Sprintf("https://%s:%s/api", host, port)
 
-	r, err := http.Get(url)
+	c := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	r, err := c.Get(url)
 	if err != nil {
 		return err.Error()
 	}
